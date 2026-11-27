@@ -1,0 +1,708 @@
+{
+  "generatedAt": "2026-11-23T08:10:54.595Z",
+  "node": "v22.23.4",
+  "tests": {
+    "total": 129,
+    "passed": 129,
+    "failed": 0,
+    "suites": [
+      {
+        "file": "tests/advice.test.js",
+        "tests": 9,
+        "passed": 9,
+        "names": [
+          "defines role, grounding, impact explanation and strict output",
+          "isolates user text under \"untrusted\" and includes live data",
+          "uses the AI result when it validates, and strips unknown keys",
+          "caches identical AI requests",
+          "falls back when the AI throws",
+          "falls back when the AI returns an invalid shape",
+          "never forwards a flagged injection note to the model",
+          "computes impact from live PM2.5, not client input",
+          "engine \"rules\" returns the deterministic plan and never calls the model"
+        ]
+      },
+      {
+        "file": "tests/aiClient.test.js",
+        "tests": 7,
+        "passed": 7,
+        "names": [
+          "is disabled without a key",
+          "Gemini: system instruction is sent as the system role and the key stays in a header",
+          "Anthropic: uses the system field, model and version header",
+          "rejects when the provider answers with something that is not JSON",
+          "maps HTTP errors, network failures and timeouts to safe errors",
+          "always matches the schema the AI output must satisfy",
+          "clean air gets a calm summary and no health note without vulnerable people"
+        ]
+      },
+      {
+        "file": "tests/api.test.js",
+        "tests": 22,
+        "passed": 22,
+        "names": [
+          "sets CSP and hides the framework",
+          "rejects oversized and malformed bodies",
+          "unknown API routes return a JSON 404",
+          "returns live air, weather and the cleanest daytime hour",
+          "uses the cache for repeated nearby lookups",
+          "still works when weather fails",
+          "reports an upstream failure safely",
+          "validates coordinates",
+          "names the street, area and city for coordinates, in English and Tamil",
+          "returns null where there is no address",
+          "rejects bad coordinates",
+          "narrows a search to a country when asked, and rejects a bad code",
+          "returns clean place results and skips unusable ones",
+          "requires at least two characters",
+          "returns deterministic impact numbers",
+          "rejects unknown fields and bad enums",
+          "falls back to rule-based advice with live data and impact",
+          "returns Tamil advice when requested",
+          "flags and ignores prompt-injection notes",
+          "rejects invalid bodies",
+          "rules engine returns the deterministic plan without a model",
+          "rejects an unknown engine"
+        ]
+      },
+      {
+        "file": "tests/chat.test.js",
+        "tests": 18,
+        "passed": 18,
+        "names": [
+          "accepts values from the live data and the standard AQI bands",
+          "rejects an invented AQI or PM2.5 reading",
+          "what does AQI mean?",
+          "do I need an N95 mask?",
+          "can I go jogging",
+          "do indoor plants clean air",
+          "should I open the windows",
+          "is metro better than a car",
+          "answers in Tamil",
+          "dry run without a key answers from live data and traces the prompt",
+          "uses the model reply when it is grounded",
+          "discards a reply that invents the AQI and falls back",
+          "never forwards an injection attempt to the model",
+          "earlier messages that look like instructions are removed from the prompt",
+          "answers with live data",
+          "validates the body strictly",
+          "every intent answers from live numbers only (en)",
+          "every intent answers from live numbers only (ta)"
+        ]
+      },
+      {
+        "file": "tests/comparison.test.js",
+        "tests": 7,
+        "passed": 7,
+        "names": [
+          "unhealthy air: the AirSense plan changes habits and lowers exposure and CO2",
+          "clean air: nothing is added that the air does not call for",
+          "working from home needs no mask or peak-hour changes",
+          "walkers and cyclists move indoors only when the air is bad",
+          "Tamil text",
+          "returns a comparison from live data",
+          "rejects extra keys and bad coordinates"
+        ]
+      },
+      {
+        "file": "tests/diagnostics.test.js",
+        "tests": 16,
+        "passed": 16,
+        "names": [
+          "picks the cleanest slot inside each activity opening hours",
+          "never schedules an activity outside its hours and marks the grid closed",
+          "children get stricter thresholds than general exercise",
+          "handles an empty forecast and summarises for the prompt",
+          "aggregates request latency per route and keeps a bounded trace list",
+          "stage records timing, failures and skips",
+          "cache statistics count hits and misses",
+          "dry run without a key shows the prompt, skips the model and explains why",
+          "records raw model output and a failed validation with readable issues",
+          "marks a cache hit and never calls the model twice",
+          "exposes AI config, pipeline, controls, runtime and never any secret",
+          "environment response carries clean-air windows",
+          "records request metrics and serves a trace by id",
+          "every live security probe really behaves as the console expects",
+          "every header check passes on a real response",
+          "serves the system instruction"
+        ]
+      },
+      {
+        "file": "tests/impact.test.js",
+        "tests": 9,
+        "passed": 9,
+        "names": [
+          "computes commute CO2 from mode and distance",
+          "no changes means no savings",
+          "switching a car commute to metro saves CO2 and exposure",
+          "mask and purifier reduce exposure without changing CO2",
+          "clean cooking helps biomass households more than LPG households",
+          "a worse choice shows negative savings (honest direction)",
+          "zero pollution yields zero exposure and handles bad input",
+          "breakdown values each choice on its own, whether or not it is switched on",
+          "mode table ranks every way of travelling at this distance and air"
+        ]
+      },
+      {
+        "file": "tests/lifestyle.test.js",
+        "tests": 14,
+        "passed": 14,
+        "names": [
+          "clean air: outdoors everywhere, no mask, alert none",
+          "smoggy air: indoor mode, mask, shut windows, purifier and wash-up on the checklist",
+          "finds the clean slot: walking goes outdoors only in the clean hour",
+          "sensitive lifestyles and respiratory conditions use stricter limits and get an earlier alert",
+          "warns when air is about to turn unhealthy and when it will clear",
+          "every lifestyle has tips and Tamil output is Tamil",
+          "ventilation advice follows outdoor AQI",
+          "plants are described with honest limits",
+          "impact figures come from the shared emission factors, and unreliable ones are left out",
+          "cycling is gated by the air",
+          "lifestyle changes the order of actions",
+          "weekly challenge is stable within a week and rotates across weeks",
+          "POST /api/planner",
+          "GET /api/indoor and /api/sustainability"
+        ]
+      },
+      {
+        "file": "tests/local.test.js",
+        "tests": 7,
+        "passed": 7,
+        "names": [
+          "unhealthy air: limit outdoor time and no heavy exercise outside",
+          "children, older adults and sensitive people get stricter levels than everyone",
+          "selecting a vulnerable group tightens the activity limits",
+          "clean air allows everything and levels are monotonic",
+          "Tamil text is returned and numbers are the live AQI",
+          "returns live-data recommendations",
+          "rejects unknown groups, bad coordinates and extra keys"
+        ]
+      },
+      {
+        "file": "tests/utils.test.js",
+        "tests": 20,
+        "passed": 20,
+        "names": [
+          "categorizes AQI 0 as good",
+          "categorizes AQI 50 as good",
+          "categorizes AQI 51 as moderate",
+          "categorizes AQI 150 as sensitive",
+          "categorizes AQI 182 as unhealthy",
+          "categorizes AQI 250 as veryUnhealthy",
+          "categorizes AQI 400 as hazardous",
+          "rejects invalid values",
+          "converts PM2.5 to cigarettes per day",
+          "keeps place names readable and strips markup",
+          "limits name length",
+          "detects prompt injection phrases",
+          "drops flagged notes but keeps normal ones",
+          "shares one in-flight load between concurrent callers",
+          "expires entries and does not cache failures",
+          "evicts the oldest entry when full",
+          "parses plain and fenced JSON",
+          "throws on garbage",
+          "apply defaults and reject unknown keys",
+          "rejects out-of-range coordinates and values"
+        ]
+      }
+    ],
+    "coverage": {
+      "lines": 95.6,
+      "statements": 95.1,
+      "functions": 89.5,
+      "branches": 78.9
+    }
+  },
+  "lint": {
+    "files": 75,
+    "errors": 0,
+    "warnings": 0
+  },
+  "format": {
+    "passed": true
+  },
+  "codeMap": {
+    "files": [
+      {
+        "file": "src/server.js",
+        "role": "Process entry, graceful shutdown",
+        "criteria": [
+          "quality"
+        ],
+        "lines": 27
+      },
+      {
+        "file": "src/app.js",
+        "role": "Express app factory, middleware order",
+        "criteria": [
+          "quality",
+          "security",
+          "efficiency"
+        ],
+        "lines": 42
+      },
+      {
+        "file": "src/config/index.js",
+        "role": "Immutable config from environment, no hard-coded secrets",
+        "criteria": [
+          "security",
+          "quality"
+        ],
+        "lines": 49
+      },
+      {
+        "file": "src/middleware/security.js",
+        "role": "helmet CSP, CORS, rate limiters",
+        "criteria": [
+          "security"
+        ],
+        "lines": 60
+      },
+      {
+        "file": "src/middleware/validate.js",
+        "role": "zod validation middleware",
+        "criteria": [
+          "security",
+          "quality"
+        ],
+        "lines": 28
+      },
+      {
+        "file": "src/middleware/errorHandler.js",
+        "role": "Safe, uniform error responses",
+        "criteria": [
+          "security",
+          "quality"
+        ],
+        "lines": 35
+      },
+      {
+        "file": "src/middleware/metrics.js",
+        "role": "Per-route latency and status metrics",
+        "criteria": [
+          "efficiency"
+        ],
+        "lines": 28
+      },
+      {
+        "file": "src/routes/api.js",
+        "role": "HTTP routes",
+        "criteria": [
+          "quality"
+        ],
+        "lines": 172
+      },
+      {
+        "file": "src/services/environment.js",
+        "role": "Live air and weather, cached",
+        "criteria": [
+          "alignment",
+          "efficiency"
+        ],
+        "lines": 174
+      },
+      {
+        "file": "src/services/geocoding.js",
+        "role": "Place search, cached",
+        "criteria": [
+          "alignment",
+          "efficiency"
+        ],
+        "lines": 143
+      },
+      {
+        "file": "src/services/windows.js",
+        "role": "Clean-air windows planner (deterministic)",
+        "criteria": [
+          "alignment",
+          "efficiency"
+        ],
+        "lines": 103
+      },
+      {
+        "file": "src/services/systemInstruction.js",
+        "role": "The GenAI system instruction",
+        "criteria": [
+          "alignment",
+          "security"
+        ],
+        "lines": 61
+      },
+      {
+        "file": "src/services/aiClient.js",
+        "role": "Gemini and Claude clients, timeouts, JSON parsing",
+        "criteria": [
+          "alignment",
+          "security"
+        ],
+        "lines": 90
+      },
+      {
+        "file": "src/services/advice.js",
+        "role": "Traced GenAI pipeline with validation and fallback",
+        "criteria": [
+          "alignment",
+          "security"
+        ],
+        "lines": 203
+      },
+      {
+        "file": "src/services/fallbackAdvice.js",
+        "role": "Rule-based advice in English and Tamil",
+        "criteria": [
+          "alignment",
+          "quality"
+        ],
+        "lines": 357
+      },
+      {
+        "file": "src/services/chat.js",
+        "role": "Grounded chat pipeline: sanitise, prompt, model, grounding check, fallback",
+        "criteria": [
+          "alignment",
+          "security"
+        ],
+        "lines": 224
+      },
+      {
+        "file": "src/services/chatInstruction.js",
+        "role": "Chat system instruction",
+        "criteria": [
+          "alignment",
+          "security"
+        ],
+        "lines": 44
+      },
+      {
+        "file": "src/services/chatFallback.js",
+        "role": "Rule-based chat answers (EN, TA)",
+        "criteria": [
+          "alignment",
+          "quality"
+        ],
+        "lines": 239
+      },
+      {
+        "file": "public/js/placeSearch.js",
+        "role": "Accessible type-ahead place search (ARIA combobox)",
+        "criteria": [
+          "accessibility",
+          "efficiency"
+        ],
+        "lines": 146
+      },
+      {
+        "file": "src/services/aiContext.js",
+        "role": "Shared GenAI run context (plan and chat)",
+        "criteria": [
+          "quality",
+          "efficiency"
+        ],
+        "lines": 58
+      },
+      {
+        "file": "public/js/mathUtil.js",
+        "role": "Shared numeric helpers for the 3D city and skyline",
+        "criteria": [
+          "quality"
+        ],
+        "lines": 16
+      },
+      {
+        "file": "public/js/gate.js",
+        "role": "First-run location dialog (detect, search, popular cities; page behind is inert)",
+        "criteria": [
+          "accessibility",
+          "alignment"
+        ],
+        "lines": 289
+      },
+      {
+        "file": "public/js/regions.js",
+        "role": "Country, state and city lists for the location picker (EN and TA)",
+        "criteria": [
+          "quality"
+        ],
+        "lines": 331
+      },
+      {
+        "file": "public/js/cities.js",
+        "role": "Known cities, nearest-city naming, Tamil place names",
+        "criteria": [
+          "quality"
+        ],
+        "lines": 79
+      },
+      {
+        "file": "public/js/cursor.js",
+        "role": "Coloured cursor (fine pointers only, reduced-motion aware)",
+        "criteria": [
+          "accessibility"
+        ],
+        "lines": 85
+      },
+      {
+        "file": "public/js/wizard.js",
+        "role": "Step-by-step plan wizard and plan tabs",
+        "criteria": [
+          "accessibility",
+          "quality"
+        ],
+        "lines": 131
+      },
+      {
+        "file": "public/js/localView.js",
+        "role": "Dashboard place module: activities, group advice, AI plan",
+        "criteria": [
+          "alignment"
+        ],
+        "lines": 200
+      },
+      {
+        "file": "src/services/local.js",
+        "role": "Location-based activity safety and group advice",
+        "criteria": [
+          "alignment"
+        ],
+        "lines": 339
+      },
+      {
+        "file": "src/services/planner.js",
+        "role": "Daily planner and alert level",
+        "criteria": [
+          "alignment",
+          "efficiency"
+        ],
+        "lines": 334
+      },
+      {
+        "file": "src/services/comparison.js",
+        "role": "Your plan vs AirSense plan comparison",
+        "criteria": [
+          "alignment",
+          "testing"
+        ],
+        "lines": 144
+      },
+      {
+        "file": "src/services/indoor.js",
+        "role": "Indoor air advisor (ventilation verdict, tips)",
+        "criteria": [
+          "alignment"
+        ],
+        "lines": 95
+      },
+      {
+        "file": "src/services/sustainability.js",
+        "role": "Sustainable actions and weekly challenge",
+        "criteria": [
+          "alignment"
+        ],
+        "lines": 128
+      },
+      {
+        "file": "src/data/lifestyleContent.js",
+        "role": "Bilingual indoor and sustainability content",
+        "criteria": [
+          "alignment"
+        ],
+        "lines": 491
+      },
+      {
+        "file": "src/services/telemetry.js",
+        "role": "Request metrics and GenAI traces",
+        "criteria": [
+          "efficiency",
+          "quality"
+        ],
+        "lines": 173
+      },
+      {
+        "file": "src/services/diagnostics.js",
+        "role": "Engineering page data and live verification specs",
+        "criteria": [
+          "quality",
+          "security"
+        ],
+        "lines": 278
+      },
+      {
+        "file": "src/utils/aqi.js",
+        "role": "AQI bands and cigarette equivalents",
+        "criteria": [
+          "alignment"
+        ],
+        "lines": 40
+      },
+      {
+        "file": "src/utils/impact.js",
+        "role": "Deterministic impact model",
+        "criteria": [
+          "alignment"
+        ],
+        "lines": 262
+      },
+      {
+        "file": "src/utils/sanitize.js",
+        "role": "Prompt-injection guard",
+        "criteria": [
+          "security"
+        ],
+        "lines": 66
+      },
+      {
+        "file": "src/utils/schemas.js",
+        "role": "Request and AI-output schemas",
+        "criteria": [
+          "security",
+          "quality"
+        ],
+        "lines": 211
+      },
+      {
+        "file": "src/utils/cache.js",
+        "role": "TTL cache with in-flight de-duplication",
+        "criteria": [
+          "efficiency"
+        ],
+        "lines": 101
+      },
+      {
+        "file": "src/utils/http.js",
+        "role": "Fetch with timeout and safe errors",
+        "criteria": [
+          "security",
+          "efficiency"
+        ],
+        "lines": 38
+      },
+      {
+        "file": "src/utils/errors.js",
+        "role": "AppError type",
+        "criteria": [
+          "quality"
+        ],
+        "lines": 22
+      },
+      {
+        "file": "src/utils/logger.js",
+        "role": "Structured logger",
+        "criteria": [
+          "quality"
+        ],
+        "lines": 24
+      },
+      {
+        "file": "public/js/main.js",
+        "role": "App controller and live refresh",
+        "criteria": [
+          "alignment",
+          "efficiency"
+        ],
+        "lines": 814
+      },
+      {
+        "file": "public/js/router.js",
+        "role": "Hash router and nav bar state",
+        "criteria": [
+          "accessibility",
+          "quality"
+        ],
+        "lines": 113
+      },
+      {
+        "file": "public/js/world3d.js",
+        "role": "WebGL 3D city driven by live AQI, wind and day/night",
+        "criteria": [
+          "alignment",
+          "efficiency"
+        ],
+        "lines": 573
+      },
+      {
+        "file": "public/js/backdrop.js",
+        "role": "3D backdrop with 2D fallback",
+        "criteria": [
+          "quality",
+          "accessibility"
+        ],
+        "lines": 30
+      },
+      {
+        "file": "public/js/motion.js",
+        "role": "Tilt, scroll reveal, count-up (off for reduced motion)",
+        "criteria": [
+          "accessibility"
+        ],
+        "lines": 104
+      },
+      {
+        "file": "public/js/skyline.js",
+        "role": "2D canvas skyline fallback",
+        "criteria": [
+          "alignment"
+        ],
+        "lines": 600
+      },
+      {
+        "file": "public/js/ui.js",
+        "role": "Safe DOM rendering (textContent only)",
+        "criteria": [
+          "security",
+          "accessibility"
+        ],
+        "lines": 703
+      },
+      {
+        "file": "public/js/i18n.js",
+        "role": "English and Tamil strings",
+        "criteria": [
+          "accessibility"
+        ],
+        "lines": 1101
+      },
+      {
+        "file": "public/js/api.js",
+        "role": "API client with timeouts",
+        "criteria": [
+          "quality"
+        ],
+        "lines": 79
+      },
+      {
+        "file": "public/js/engineering.js",
+        "role": "Engineering console: live checks and GenAI trace",
+        "criteria": [
+          "quality"
+        ],
+        "lines": 545
+      },
+      {
+        "file": "public/js/a11yAudit.js",
+        "role": "Live accessibility self-audit",
+        "criteria": [
+          "accessibility"
+        ],
+        "lines": 174
+      },
+      {
+        "file": "public/css/styles.css",
+        "role": "Design system and layout",
+        "criteria": [
+          "accessibility"
+        ],
+        "lines": 3491
+      },
+      {
+        "file": "public/index.html",
+        "role": "Semantic page shell",
+        "criteria": [
+          "accessibility"
+        ],
+        "lines": 1061
+      }
+    ],
+    "sourceLines": 15548,
+    "testLines": 1671
+  }
+}

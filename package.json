@@ -1,0 +1,51 @@
+{
+  "name": "airsense-ai",
+  "version": "1.0.0",
+  "description": "AirSense AI: a live, location-aware GenAI assistant that helps families and communities cope with urban smog and air pollution.",
+  "main": "src/server.js",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "dupes": "npx --yes jscpd@4 src public/js scripts --min-lines 5 --min-tokens 50 --reporters console --ignore \"**/vendor/**,**/quality-report.json,**/i18n.js\"",
+    "report": "node scripts/quality-report.js",
+    "vendor": "node -e \"require('fs').copyFileSync('node_modules/three/build/three.module.min.js','public/vendor/three.module.min.js')\""
+  },
+  "dependencies": {
+    "compression": "^1.7.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.4.2",
+    "supertest": "^7.0.0",
+    "three": "0.170.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js"
+    ]
+  }
+}

@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AirSense AI</title>
+    <meta
+      name="description"
+      content="Live air quality turned into a daily plan for your family: low-emission routines, indoor air hacks, greener swaps and the real impact of each choice."
+    />
+    <meta name="theme-color" content="#0E1B26" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%235FD4C8' stroke-width='4'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23F4B63F'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body data-view="home">
+    <a class="skip" href="#main" data-i18n="skip">Skip to main content</a>
+    <div id="live" class="sr-only" role="status" aria-live="polite"></div>
+
+    <canvas
+      id="sky"
+      role="img"
+      data-i18n-aria="aria.sky"
+      aria-label="Animated city skyline"
+    ></canvas>
+
+    <div class="shell">
+      <header class="nav">
+        <a class="brand" href="#/" data-i18n-aria="aria.home" aria-label="AirSense AI, home">
+          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="4" />
+            <circle cx="16" cy="16" r="4" fill="#F4B63F" />
+          </svg>
+          <span class="brand-name">AirSense</span>
+        </a>
+
+        <nav id="site-nav" class="links" data-i18n-aria="aria.main" aria-label="Main">
+          <a href="#/" data-route="home" data-i18n="nav.home">Home</a>
+          <a href="#/dashboard" data-route="dashboard" data-i18n="nav.dashboard">Dashboard</a>
+          <a href="#/planner" data-route="planner" data-i18n="nav.planner">Planner</a>
+          <a href="#/indoor" data-route="indoor" data-i18n="nav.indoor">Indoor air</a>
+          <a href="#/green" data-route="green" data-i18n="nav.green">Green living</a>
+          <a href="#/assistant" data-route="assistant" data-i18n="nav.assistant">My plan</a>
+          <a href="#/lab" data-route="lab" data-i18n="nav.lab">Impact lab</a>
+          <a href="#/engineering" data-route="engineering" data-i18n="nav.engineering"
+            >Engineering</a
+          >
+          <a href="#/about" data-route="about" data-i18n="nav.about">About</a>
+        </nav>
+
+        <div class="nav-tools">
+          <button
+            id="place-chip"
+            class="place-chip"
+            type="button"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+          >
+            <span class="chip-dot" aria-hidden="true"></span>
+            <span id="chip-place" class="chip-place">Delhi</span>
+            <span id="chip-aqi" class="chip-aqi">AQI --</span>
+          </button>
+          <button
+            id="sky-btn"
+            class="btn btn-icon sky-btn"
+            type="button"
+            data-sky-mode="auto"
+            aria-label="Sky theme"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                id="sky-moon"
+                d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"
+                fill="currentColor"
+              />
+              <circle id="sky-sun" cx="12" cy="12" r="4.2" fill="currentColor" />
+              <path
+                id="sky-rays"
+                d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <button id="lang-btn" class="btn btn-quiet" type="button" lang="ta">தமிழ்</button>
+          <button
+            id="nav-toggle"
+            class="btn btn-icon nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="site-nav"
+            data-i18n-aria="nav.menu"
+            aria-label="Menu"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main id="main" tabindex="-1">
+        <p id="where" class="where" hidden>
+          <span class="where-pin" aria-hidden="true"></span>
+          <span id="where-text" class="where-text"></span>
+          <button id="where-change" class="where-change" type="button" data-i18n="gate.change">
+            Change location
+          </button>
+        </p>
+        <div id="alert-banner" class="alert-banner" hidden></div>
+        <p id="status" class="status" role="status"></p>
+
+        <!-- HOME -->
+        <section class="view view--wide" data-view="home" aria-labelledby="home-h">
+          <div class="home-hero">
+            <div class="panel home-card">
+              <p class="live">
+                <span class="live-dot" aria-hidden="true"></span>
+                <span id="home-live" class="home-live"></span>
+              </p>
+              <h1 id="home-h" data-i18n="home.title">
+                Today’s air, turned into a plan for your family.
+              </h1>
+              <p class="home-lede" data-i18n="home.lede">
+                AirSense reads the real air quality where you live, then writes low-emission
+                routines, indoor air hacks and greener swaps for your lifestyle. It shows what each
+                choice is worth, in numbers and in the sky behind this page.
+              </p>
+              <div class="cta-row">
+                <a class="btn btn-primary" href="#/dashboard" data-i18n="home.ctaAir">See my air</a>
+                <a class="btn btn-quiet" href="#/assistant" data-i18n="home.ctaPlan"
+                  >Build my plan</a
+                >
+              </div>
+            </div>
+            <div class="orb" aria-hidden="true">
+              <span class="orb-ring r1"></span>
+              <span class="orb-ring r2"></span>
+              <span class="orb-ring r3"></span>
+              <span class="orb-core">
+                <span id="orb-aqi" class="orb-aqi">0</span>
+                <span id="orb-cat" class="orb-cat"></span>
+              </span>
+            </div>
+          </div>
+
+          <section class="panel" aria-labelledby="cities-h">
+            <h2 id="cities-h" data-i18n="home.citiesHeading">Air across India right now</h2>
+            <p class="lede" data-i18n="home.citiesLede">
+              Live readings. Pick a city to open its dashboard.
+            </p>
+            <ul id="cities" class="cities"></ul>
+          </section>
+
+          <section class="modules" aria-labelledby="modules-h">
+            <h2 id="modules-h" class="section-h" data-i18n="home.modulesHeading">What is inside</h2>
+            <ul class="module-grid">
+              <li class="panel module">
+                <h3><a href="#/dashboard" data-i18n="nav.dashboard">Dashboard</a></h3>
+                <p data-i18n="home.modDashboard">
+                  Live AQI, pollutants and a 24 hour forecast, plus breathing windows: the best hour
+                  for exercise, school runs, airing the house and drying laundry.
+                </p>
+              </li>
+              <li class="panel module">
+                <h3><a href="#/assistant" data-i18n="nav.assistant">Assistant</a></h3>
+                <p data-i18n="home.modAssistant">
+                  Tell it how you travel, cook and who lives with you. A GenAI plan comes back with
+                  routines, indoor tips and swaps, in English or Tamil.
+                </p>
+              </li>
+              <li class="panel module">
+                <h3><a href="#/lab" data-i18n="nav.lab">Impact lab</a></h3>
+                <p data-i18n="home.modLab">
+                  Switch your commute, add a purifier, scale it to a street or a town, and watch
+                  CO₂, exposure and the skyline respond.
+                </p>
+              </li>
+              <li class="panel module">
+                <h3><a href="#/engineering" data-i18n="nav.engineering">Engineering</a></h3>
+                <p data-i18n="home.modEngineering">
+                  The build, open for inspection: live security checks, test results, and a step by
+                  step trace of how the GenAI plan was made.
+                </p>
+              </li>
+            </ul>
+          </section>
+
+          <section class="panel" aria-labelledby="how-h">
+            <h2 id="how-h" data-i18n="home.howHeading">How a plan is made</h2>
+            <ol class="how">
+              <li>
+                <h3 data-i18n="home.how1">Read the air</h3>
+                <p data-i18n="home.how1d">Live AQI and weather for your exact place.</p>
+              </li>
+              <li>
+                <h3 data-i18n="home.how2">Do the maths</h3>
+                <p data-i18n="home.how2d">
+                  Impact is calculated by formula, never guessed by the model.
+                </p>
+              </li>
+              <li>
+                <h3 data-i18n="home.how3">Guard the input</h3>
+                <p data-i18n="home.how3d">Free text is cleaned before it gets near a prompt.</p>
+              </li>
+              <li>
+                <h3 data-i18n="home.how4">Ask the model</h3>
+                <p data-i18n="home.how4d">
+                  A system instruction and grounded facts go to the GenAI.
+                </p>
+              </li>
+              <li>
+                <h3 data-i18n="home.how5">Check the answer</h3>
+                <p data-i18n="home.how5d">
+                  The reply must pass a strict schema, or rules take over.
+                </p>
+              </li>
+            </ol>
+          </section>
+        </section>
+
+        <!-- DASHBOARD -->
+        <section class="view view--wide" data-view="dashboard" aria-labelledby="now-h" hidden>
+          <section class="panel locator" aria-labelledby="loc-h">
+            <h2 id="loc-h" class="panel-h" data-i18n="dash.where">Choose your place</h2>
+            <div class="locator-row">
+              <form
+                id="dash-search"
+                class="locator-form"
+                role="search"
+                autocomplete="off"
+                novalidate
+              >
+                <label for="dash-q" class="sr-only" data-i18n="dash.search"
+                  >Search a city or area</label
+                >
+                <div class="combo">
+                  <input
+                    id="dash-q"
+                    type="text"
+                    role="combobox"
+                    aria-expanded="false"
+                    aria-controls="dash-suggest"
+                    aria-autocomplete="list"
+                    maxlength="80"
+                    data-i18n-placeholder="dash.searchPlaceholder"
+                    placeholder="Type a city or area, e.g. Madurai"
+                  />
+                  <ul id="dash-suggest" class="suggest" role="listbox" hidden></ul>
+                </div>
+                <button class="btn btn-primary" type="submit" data-i18n="searchButton">
+                  Search
+                </button>
+              </form>
+              <button id="dash-locate" class="btn btn-quiet" type="button" data-i18n="dash.locate">
+                Use my location
+              </button>
+            </div>
+            <p id="dash-msg" class="hint" role="status"></p>
+            <div
+              id="dash-cities"
+              class="chip-row"
+              data-i18n-aria="aria.quick"
+              aria-label="Quick picks"
+            ></div>
+          </section>
+
+          <div class="two-col dash-grid">
+            <section class="panel hero" aria-labelledby="now-h">
+              <div class="hero-head">
+                <h1 id="now-h" class="panel-h" data-i18n="nowHeading">Air right now</h1>
+                <p class="live">
+                  <span class="live-dot" aria-hidden="true"></span>
+                  <span data-i18n="live">Live</span>
+                  <span id="updated" class="updated"></span>
+                </p>
+              </div>
+              <p id="place-name" class="place-name"></p>
+
+              <div class="gauge">
+                <svg viewBox="0 0 200 200" class="gauge-svg" aria-hidden="true" focusable="false">
+                  <circle class="ring-track" cx="100" cy="100" r="84" />
+                  <circle id="ring-arc" class="ring-arc" cx="100" cy="100" r="84" />
+                </svg>
+                <div class="gauge-center">
+                  <p id="aqi-value" class="aqi-value">--</p>
+                  <p class="aqi-unit" data-i18n="aqiUnit">US AQI</p>
+                </div>
+              </div>
+
+              <p id="aqi-category" class="aqi-category"></p>
+              <p id="cigarettes" class="cigarettes"></p>
+              <dl id="pollutants" class="pollutants" data-i18n-aria="pollutantsLabel"></dl>
+
+              <h2 class="sub" data-i18n="forecastHeading">Next 24 hours</h2>
+              <div id="forecast" class="forecast"></div>
+              <p id="best-time" class="best-time"></p>
+            </section>
+            <div class="stack">
+              <section class="panel" aria-labelledby="win-h">
+                <h2 id="win-h" class="panel-h" data-i18n="windowsHeading">Breathing windows</h2>
+                <p class="lede" data-i18n="windowsLede">
+                  The best hour for each everyday activity, from the live forecast.
+                </p>
+                <div id="windows" class="windows"></div>
+                <ul class="legend" aria-hidden="true">
+                  <li>
+                    <span class="swatch go"></span><span data-i18n="verdict.go">Good window</span>
+                  </li>
+                  <li>
+                    <span class="swatch caution"></span
+                    ><span data-i18n="verdict.caution">Use care</span>
+                  </li>
+                  <li>
+                    <span class="swatch avoid"></span><span data-i18n="verdict.avoid">Skip it</span>
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </div>
+
+          <section class="panel" aria-labelledby="act-h">
+            <h2 id="act-h" class="panel-h" data-i18n="near.activities">
+              Safer outdoor activities right now
+            </h2>
+            <fieldset class="field-set" id="near-groups">
+              <legend data-i18n="near.groups">Who needs extra care?</legend>
+              <label class="check"
+                ><input type="checkbox" name="groups" value="children" /><span
+                  data-i18n="near.children"
+                  >Children at home</span
+                ></label
+              >
+              <label class="check"
+                ><input type="checkbox" name="groups" value="elderly" /><span
+                  data-i18n="near.elderly"
+                  >Older adults</span
+                ></label
+              >
+              <label class="check"
+                ><input type="checkbox" name="groups" value="sensitive" /><span
+                  data-i18n="near.sensitive"
+                  >Sensitive</span
+                ></label
+              >
+            </fieldset>
+            <div id="local-activities" aria-live="polite" aria-busy="false"></div>
+          </section>
+
+          <h2 class="section-h" data-i18n="near.groupsHeading">Advice for each group</h2>
+          <div id="local-groups" aria-live="polite"></div>
+          <section class="panel" aria-labelledby="ai-h">
+            <h2 id="ai-h" class="panel-h" data-i18n="near.ai">Personalised plan from AI</h2>
+            <p class="hint" data-i18n="near.aiHint">
+              Uses the live air here and the groups you ticked.
+            </p>
+            <button id="near-ai-btn" class="btn btn-primary" type="button" data-i18n="near.aiAsk">
+              Generate my personalised recommendations
+            </button>
+            <div id="near-ai-out" class="ai-box" aria-live="polite" aria-busy="false"></div>
+          </section>
+        </section>
+
+        <!-- ASSISTANT -->
+        <section class="view view--wide" data-view="assistant" aria-labelledby="assist-h" hidden>
+          <h1 id="assist-h" class="page-h" data-i18n="assistHeading">Your air plan</h1>
+          <p class="lede" data-i18n="wiz.intro">
+            Answer four short steps. Then you get two plans side by side in the tabs: the AirSense
+            plan (rules, always the same for the same air) and the AI plan (written by Gemini).
+          </p>
+
+          <section class="panel wizard" aria-labelledby="wiz-h">
+            <h2 id="wiz-h" class="sr-only" data-i18n="wiz.heading">Plan setup, step by step</h2>
+            <ol
+              id="wiz-steps"
+              class="steps"
+              data-i18n-aria="aria.progress"
+              aria-label="Progress"
+            ></ol>
+            <form id="profile-form" class="form" novalidate>
+              <fieldset class="step" data-step="1">
+                <legend tabindex="-1" data-i18n="wiz.s1">
+                  Step 1 of 4 · How do you get around?
+                </legend>
+                <p class="hint" data-i18n="wiz.s1hint">
+                  Travel is often the biggest part of your exposure and your carbon footprint.
+                </p>
+                <div class="field">
+                  <label for="commuteMode" data-i18n="commute">How do you get around?</label>
+                  <select id="commuteMode" name="commuteMode"></select>
+                </div>
+                <div class="field">
+                  <label for="commuteKm" data-i18n="distance">One-way distance (km)</label>
+                  <input
+                    id="commuteKm"
+                    name="commuteKm"
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="1"
+                    inputmode="numeric"
+                  />
+                </div>
+              </fieldset>
+              <fieldset class="step" data-step="2" hidden>
+                <legend tabindex="-1" data-i18n="wiz.s2">Step 2 of 4 · Your home</legend>
+                <p class="hint" data-i18n="wiz.s2hint">
+                  Cooking fuel and a purifier change the air you breathe indoors.
+                </p>
+                <div class="field-row">
+                  <div class="field">
+                    <label for="homeType" data-i18n="homeLabel">Home</label>
+                    <select id="homeType" name="homeType"></select>
+                  </div>
+                  <div class="field">
+                    <label for="cooking" data-i18n="cooking">Cooking fuel</label>
+                    <select id="cooking" name="cooking"></select>
+                  </div>
+                </div>
+                <label class="check"
+                  ><input type="checkbox" id="hasPurifier" name="hasPurifier" /><span
+                    data-i18n="purifier"
+                    >We already run an air purifier</span
+                  ></label
+                >
+              </fieldset>
+              <fieldset class="step" data-step="3" hidden>
+                <legend tabindex="-1" data-i18n="wiz.s3">
+                  Step 3 of 4 · Who needs extra care?
+                </legend>
+                <p class="hint" data-i18n="wiz.s3hint">
+                  We use this to make the advice stricter for them.
+                </p>
+                <fieldset class="checks">
+                  <legend data-i18n="household">Who lives with you?</legend>
+                  <label class="check"
+                    ><input type="checkbox" name="vulnerable" value="children" /><span
+                      data-i18n="vulnerable.children"
+                      >Children</span
+                    ></label
+                  >
+                  <label class="check"
+                    ><input type="checkbox" name="vulnerable" value="elderly" /><span
+                      data-i18n="vulnerable.elderly"
+                      >Elders</span
+                    ></label
+                  >
+                  <label class="check"
+                    ><input type="checkbox" name="vulnerable" value="respiratory" /><span
+                      data-i18n="vulnerable.respiratory"
+                      >Someone with breathing problems</span
+                    ></label
+                  >
+                </fieldset>
+                <div class="field">
+                  <label for="notes" data-i18n="notes"
+                    >Anything else we should know? (optional)</label
+                  >
+                  <input
+                    id="notes"
+                    name="notes"
+                    type="text"
+                    maxlength="200"
+                    aria-describedby="notes-hint"
+                  />
+                  <p id="notes-hint" class="hint" data-i18n="notesHint">
+                    A short note, up to 200 characters.
+                  </p>
+                </div>
+              </fieldset>
+              <fieldset class="step" data-step="4" hidden>
+                <legend tabindex="-1" data-i18n="wiz.s4">Step 4 of 4 · Check and build</legend>
+                <p class="hint" data-i18n="wiz.s4hint">
+                  Is this right? Go back to change anything.
+                </p>
+                <dl id="wiz-review" class="review"></dl>
+              </fieldset>
+            </form>
+            <div class="wizard-nav">
+              <button id="wiz-back" class="btn btn-quiet" type="button" data-i18n="wiz.back">
+                Back
+              </button>
+              <button id="wiz-next" class="btn btn-primary" type="button" data-i18n="wiz.next">
+                Next
+              </button>
+            </div>
+          </section>
+
+          <section id="plan-results" class="panel plan" aria-labelledby="plan-h" hidden>
+            <div class="plan-head">
+              <h2 id="plan-h" class="panel-h" data-i18n="planHeading">Your plan</h2>
+              <button id="wiz-edit" class="btn btn-quiet" type="button" data-i18n="wiz.edit">
+                Change my answers
+              </button>
+            </div>
+            <div class="tabs" role="tablist" data-i18n-aria="aria.plans" aria-label="Plans">
+              <button
+                id="tab-rules"
+                class="tab"
+                role="tab"
+                type="button"
+                aria-selected="true"
+                aria-controls="panel-rules"
+                data-i18n="wiz.tabRules"
+              >
+                AirSense plan
+              </button>
+              <button
+                id="tab-ai"
+                class="tab"
+                role="tab"
+                type="button"
+                aria-selected="false"
+                aria-controls="panel-ai"
+                tabindex="-1"
+                data-i18n="wiz.tabAi"
+              >
+                AI plan
+              </button>
+              <button
+                id="tab-compare"
+                class="tab"
+                role="tab"
+                type="button"
+                aria-selected="false"
+                aria-controls="panel-compare"
+                tabindex="-1"
+                data-i18n="wiz.tabCompare"
+              >
+                Compare
+              </button>
+            </div>
+            <div
+              id="panel-rules"
+              role="tabpanel"
+              aria-labelledby="tab-rules"
+              tabindex="0"
+              aria-busy="false"
+            >
+              <p class="hint" data-i18n="wiz.rulesAbout">
+                Built by the AirSense rule engine from today's live air and your answers. It never
+                invents numbers and gives the same plan for the same air.
+              </p>
+              <div id="plan-body-rules"></div>
+            </div>
+            <div
+              id="panel-ai"
+              role="tabpanel"
+              aria-labelledby="tab-ai"
+              tabindex="0"
+              aria-busy="false"
+              hidden
+            >
+              <p class="hint" data-i18n="wiz.aiAbout">
+                Written by Gemini from the same live data, with your system instruction. Every
+                answer is validated before you see it.
+              </p>
+              <button id="plan-btn" class="btn btn-primary" type="button" data-i18n="wiz.aiButton">
+                Write my AI plan
+              </button>
+              <div id="plan-body"></div>
+            </div>
+            <div
+              id="panel-compare"
+              role="tabpanel"
+              aria-labelledby="tab-compare"
+              tabindex="0"
+              hidden
+            >
+              <p class="hint" data-i18n="wiz.compareAbout">
+                Both plans side by side, from the same live air and your answers.
+              </p>
+              <div id="compare-body"></div>
+            </div>
+            <p class="hint">
+              <a id="trace-link" href="#/engineering" hidden data-i18n="traceLink"
+                >See exactly how this plan was made</a
+              >
+            </p>
+          </section>
+        </section>
+
+        <!-- IMPACT LAB -->
+        <section class="view view--wide" data-view="lab" aria-labelledby="whatif-h" hidden>
+          <h1 id="whatif-h" class="page-h" data-i18n="whatIfHeading">Try a change</h1>
+          <div class="two-col">
+            <section class="panel" data-i18n-aria="aria.choices" aria-label="Choices">
+              <p class="lede" data-i18n="whatIfIntro">
+                Pick choices and watch the sky and your numbers respond.
+              </p>
+              <form id="choices-form" class="form" novalidate>
+                <fieldset class="lab-day">
+                  <legend data-i18n="lab.day">Your day (changes apply live)</legend>
+                  <div class="field">
+                    <label for="labMode" data-i18n="commute">How do you get around?</label>
+                    <select id="labMode"></select>
+                  </div>
+                  <div class="field">
+                    <label for="labKm"
+                      ><span data-i18n="distance">One-way distance (km)</span>:
+                      <output id="labKmOut" for="labKm"></output
+                    ></label>
+                    <input id="labKm" type="range" min="0" max="60" step="1" />
+                  </div>
+                  <div class="field">
+                    <label for="labCooking" data-i18n="cooking">Cooking fuel</label>
+                    <select id="labCooking"></select>
+                  </div>
+                </fieldset>
+                <div
+                  class="presets"
+                  role="group"
+                  data-i18n-aria="aria.presets"
+                  aria-label="Presets"
+                >
+                  <button
+                    class="btn btn-quiet"
+                    type="button"
+                    data-preset="reset"
+                    data-i18n="lab.reset"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    class="btn btn-quiet"
+                    type="button"
+                    data-preset="easy"
+                    data-i18n="lab.easy"
+                  >
+                    Easy wins
+                  </button>
+                  <button class="btn btn-quiet" type="button" data-preset="all" data-i18n="lab.all">
+                    Everything
+                  </button>
+                </div>
+                <div class="field">
+                  <label for="switchCommute" data-i18n="switchCommute">Switch my commute to</label>
+                  <select id="switchCommute" name="switchCommute"></select>
+                </div>
+                <label class="check"
+                  ><input type="checkbox" name="usePurifier" /><span data-i18n="usePurifier"
+                    >Run an air purifier at home</span
+                  ></label
+                >
+                <label class="check"
+                  ><input type="checkbox" name="wearMask" /><span data-i18n="wearMask"
+                    >Wear an N95 mask outdoors</span
+                  ></label
+                >
+                <label class="check"
+                  ><input type="checkbox" name="cleanCooking" /><span data-i18n="cleanCooking"
+                    >Cook on induction</span
+                  ></label
+                >
+                <label class="check"
+                  ><input type="checkbox" name="avoidPeakHours" /><span data-i18n="avoidPeak"
+                    >Travel outside rush hours</span
+                  ></label
+                >
+                <fieldset class="reach">
+                  <legend data-i18n="reachLegend">If this many households did the same</legend>
+                  <div id="reach" class="segmented"></div>
+                </fieldset>
+              </form>
+            </section>
+            <section class="panel" aria-labelledby="lab-res-h">
+              <h2 id="lab-res-h" class="sr-only" data-i18n="lab.results">Results</h2>
+              <div id="impact" class="impact" aria-live="polite"></div>
+            </section>
+          </div>
+        </section>
+
+        <!-- PLANNER -->
+        <section class="view view--wide" data-view="planner" aria-labelledby="planner-h" hidden>
+          <h1 id="planner-h" class="page-h" data-i18n="plannerHeading">Daily planner</h1>
+          <div class="two-col two-col--side">
+            <section class="panel" aria-labelledby="about-you-h">
+              <h2 id="about-you-h" class="panel-h" data-i18n="aboutYou">About you</h2>
+              <div data-lifestyle-host></div>
+              <form id="planner-form" class="form" novalidate>
+                <fieldset class="checks">
+                  <legend data-i18n="planner.activities">What do you like to do?</legend>
+                  <label class="check"
+                    ><input type="checkbox" name="activities" value="walking" /><span
+                      data-i18n="activity.walking"
+                      >Walking</span
+                    ></label
+                  >
+                  <label class="check"
+                    ><input type="checkbox" name="activities" value="jogging" /><span
+                      data-i18n="activity.jogging"
+                      >Jogging</span
+                    ></label
+                  >
+                  <label class="check"
+                    ><input type="checkbox" name="activities" value="exercise" /><span
+                      data-i18n="activity.exercise2"
+                      >Exercise or gym</span
+                    ></label
+                  >
+                </fieldset>
+                <div class="field">
+                  <label for="pl-period" data-i18n="planner.period">Usual time of day</label>
+                  <select id="pl-period" name="period"></select>
+                </div>
+                <div class="field">
+                  <label for="pl-sens" data-i18n="planner.sensitivity"
+                    >How sensitive are you to smog?</label
+                  >
+                  <select id="pl-sens" name="sensitivity"></select>
+                </div>
+                <label class="check"
+                  ><input type="checkbox" name="respiratory" /><span data-i18n="planner.respiratory"
+                    >Someone at home has asthma or a lung condition</span
+                  ></label
+                >
+              </form>
+              <h3 class="sub" data-i18n="alerts.heading">Alerts</h3>
+              <form id="alert-form" class="form" novalidate>
+                <div class="field">
+                  <label for="al-level" data-i18n="alerts.when">Warn me when the air is</label>
+                  <select id="al-level" name="level"></select>
+                </div>
+                <button
+                  id="notify-btn"
+                  class="btn btn-quiet"
+                  type="button"
+                  data-i18n="alerts.enable"
+                >
+                  Also notify me in this browser
+                </button>
+                <p id="notify-state" class="hint" role="status"></p>
+              </form>
+            </section>
+            <div id="planner-out" class="stack" aria-live="polite" aria-busy="false"></div>
+          </div>
+        </section>
+
+        <!-- INDOOR -->
+        <section class="view view--wide" data-view="indoor" aria-labelledby="indoor-h" hidden>
+          <h1 id="indoor-h" class="page-h" data-i18n="indoorPageHeading">Indoor air quality</h1>
+          <div id="indoor-out" class="stack" aria-live="polite" aria-busy="false"></div>
+        </section>
+
+        <!-- GREEN LIVING -->
+        <section class="view view--wide" data-view="green" aria-labelledby="green-h" hidden>
+          <h1 id="green-h" class="page-h" data-i18n="greenHeading">Green living</h1>
+          <section class="panel" aria-labelledby="green-who-h">
+            <h2 id="green-who-h" class="panel-h" data-i18n="greenWho">Tailor it to you</h2>
+            <div data-lifestyle-host></div>
+          </section>
+          <div id="green-out" class="stack" aria-live="polite" aria-busy="false"></div>
+        </section>
+
+        <!-- ENGINEERING -->
+        <section class="view view--wide" data-view="engineering" aria-labelledby="eng-h" hidden>
+          <div id="eng-root">
+            <h1 id="eng-h" class="page-h" data-i18n="nav.engineering">Engineering</h1>
+            <p class="message" data-i18n="loading">Reading the air</p>
+          </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section
+          class="view view--wide prose-view"
+          data-view="about"
+          aria-labelledby="about-h"
+          hidden
+        >
+          <h1 id="about-h" class="page-h" data-i18n="nav.about">About</h1>
+          <div class="two-col two-col--even">
+            <section class="panel">
+              <h2 class="panel-h" data-i18n="about.whyH">Why it exists</h2>
+              <p data-i18n="about.why1">
+                Every winter, smog settles over Indian cities and families are told to “stay safe”
+                without being told how. AirSense answers with specifics: which hour to open the
+                windows, whether the school run can wait, what a metro ride is worth, and what a
+                purifier changes in your own home.
+              </p>
+              <p data-i18n="about.why2">
+                It was built for the Urban Air Quality Assistant challenge: a GenAI assistant that
+                suggests low-emission routines, indoor air quality hacks and sustainable
+                alternatives, tailored to location and lifestyle, and that clearly explains the
+                direct impact of each choice.
+              </p>
+            </section>
+            <section class="panel">
+              <h2 class="panel-h" data-i18n="about.numbersH">How the numbers work</h2>
+              <p data-i18n="about.numbers1">
+                Air and weather data come from Open-Meteo and refresh every five minutes. Impact
+                figures (CO₂, PM2.5 exposure, cigarette equivalents) are computed by formula on the
+                server from published averages, so they are reproducible. The language model only
+                explains them. The assumptions are listed in the Impact lab under “How we
+                calculate”.
+              </p>
+              <p data-i18n="about.numbers2">
+                The clearer skyline when many households act together is an illustration of
+                collective effect, not a forecast.
+              </p>
+            </section>
+            <section class="panel">
+              <h2 class="panel-h" data-i18n="about.limitsH">What it cannot do</h2>
+              <p data-i18n="about.limits1">
+                It is not medical advice and not a regulatory monitor. Modelled data can differ from
+                a sensor on your street. If anyone at home has symptoms that persist, see a doctor.
+              </p>
+            </section>
+            <section class="panel">
+              <h2 class="panel-h" data-i18n="about.privacyH">Accessibility and privacy</h2>
+              <p data-i18n="about.privacy1">
+                Keyboard navigable, screen reader announcements for live changes, reduced motion
+                support, high contrast text, and English and Tamil. Your profile stays in your
+                browser. Only a place and lifestyle choices are sent to the server, and API keys
+                never leave it.
+              </p>
+              <p>
+                <a class="btn btn-quiet" href="#/engineering" data-i18n="about.inspect"
+                  >Inspect the build</a
+                >
+              </p>
+            </section>
+          </div>
+        </section>
+
+        <!-- NOT FOUND -->
+        <section class="view view--wide" data-view="notfound" aria-labelledby="nf-h" hidden>
+          <div class="panel home-card">
+            <h1 id="nf-h" data-i18n="nf.title">Page not found</h1>
+            <p class="home-lede" data-i18n="nf.lede">
+              That page does not exist. Pick a section from the menu.
+            </p>
+            <p><a class="btn btn-primary" href="#/" data-i18n="nf.back">Back to home</a></p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-foot">
+        <div class="foot-grid">
+          <div>
+            <p class="foot-brand">AirSense AI</p>
+            <p class="hint" data-i18n="footer">
+              Air and weather data from Open-Meteo. Advice is general guidance and not medical
+              advice.
+            </p>
+          </div>
+          <nav data-i18n-aria="aria.footer" aria-label="Footer">
+            <a href="#/dashboard" data-i18n="nav.dashboard">Dashboard</a>
+            <a href="#/planner" data-i18n="nav.planner">Planner</a>
+            <a href="#/indoor" data-i18n="nav.indoor">Indoor air</a>
+            <a href="#/green" data-i18n="nav.green">Green living</a>
+            <a href="#/assistant" data-i18n="nav.assistant">My plan</a>
+            <a href="#/lab" data-i18n="nav.lab">Impact lab</a>
+            <a href="#/engineering" data-i18n="nav.engineering">Engineering</a>
+            <a href="#/about" data-i18n="nav.about">About</a>
+          </nav>
+        </div>
+      </footer>
+    </div>
+
+    <button
+      id="chat-fab"
+      class="chat-fab"
+      type="button"
+      aria-expanded="false"
+      aria-controls="chat-panel"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M4 5h16v11H9l-5 4z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span data-i18n="chat.open">Ask AirSense</span>
+    </button>
+    <aside
+      id="chat-panel"
+      class="chat-panel"
+      role="dialog"
+      aria-labelledby="chat-h"
+      aria-modal="false"
+      hidden
+    >
+      <header class="chat-head">
+        <div>
+          <h2 id="chat-h" data-i18n="chat.title">Ask AirSense</h2>
+          <p id="chat-sub" class="hint"></p>
+        </div>
+        <button
+          id="chat-close"
+          class="btn btn-icon"
+          type="button"
+          data-i18n-aria="chat.close"
+          aria-label="Close chat"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              d="M6 6l12 12M18 6L6 18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      </header>
+      <div class="chat-topics" role="group" data-i18n-aria="chat.topics" aria-label="Advisor"></div>
+      <div id="chat-log" class="chat-log" role="log" aria-live="polite" tabindex="0"></div>
+      <div id="chat-chips" class="chat-chips"></div>
+      <form id="chat-form" class="chat-form" autocomplete="off">
+        <label class="sr-only" for="chat-input" data-i18n="chat.label">Your question</label>
+        <input
+          id="chat-input"
+          type="text"
+          maxlength="500"
+          data-i18n-placeholder="chat.placeholder"
+          placeholder="Ask about the air, a mask, indoor air…"
+        />
+        <button class="btn btn-primary" type="submit" data-i18n="chat.send">Send</button>
+      </form>
+    </aside>
+
+    <div id="gate" class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-h" hidden>
+      <div class="gate-card">
+        <div class="gate-top">
+          <p class="gate-eyebrow" data-i18n="gate.eyebrow">Start here</p>
+          <button id="gate-lang" class="btn btn-quiet" type="button" lang="ta">தமிழ்</button>
+        </div>
+        <h2 id="gate-h" class="gate-h" data-i18n="gate.title">Where are you breathing today?</h2>
+        <p class="gate-lede" data-i18n="gate.lede">
+          Pick your place once. Every page, the 3D city, your plan and the chat then use the live
+          air there.
+        </p>
+
+        <div class="gate-block">
+          <h3 class="gate-step">
+            <span class="gate-num">1</span> <span data-i18n="gate.autoHead">Detect it for me</span>
+          </h3>
+          <button id="gate-locate" class="btn btn-primary gate-locate" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2" />
+              <path
+                d="M12 2v4M12 18v4M2 12h4M18 12h4"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span data-i18n="gate.locate">Use my current location</span>
+          </button>
+          <p class="hint" data-i18n="gate.locateHint">
+            Your browser will ask for permission. The position is only used to read the air here and
+            is not stored on a server.
+          </p>
+        </div>
+
+        <div class="gate-block">
+          <h3 class="gate-step">
+            <span class="gate-num">2</span>
+            <span data-i18n="gate.pickHead">Or choose country, state and city</span>
+          </h3>
+          <form id="gate-pick" class="gate-pick" autocomplete="off">
+            <div class="field">
+              <label for="gate-country" data-i18n="gate.country">Country</label>
+              <select id="gate-country"></select>
+            </div>
+            <div id="gate-state-field" class="field">
+              <label for="gate-state" data-i18n="gate.state">State or union territory</label>
+              <select id="gate-state"></select>
+            </div>
+            <div id="gate-city-field" class="field">
+              <label for="gate-city" data-i18n="gate.city">City</label>
+              <select id="gate-city"></select>
+            </div>
+            <p id="gate-pick-hint" class="hint" hidden data-i18n="gate.pickOther">
+              For this country, type the city in the next step. The search is limited to it.
+            </p>
+            <button
+              id="gate-pick-go"
+              class="btn btn-primary"
+              type="submit"
+              disabled
+              data-i18n="gate.go"
+            >
+              Show air quality
+            </button>
+          </form>
+        </div>
+
+        <div class="gate-block">
+          <h3 class="gate-step">
+            <span class="gate-num">3</span>
+            <span data-i18n="gate.searchHead">Or type your city or area</span>
+          </h3>
+          <form id="gate-form" class="gate-form" role="search" autocomplete="off">
+            <div class="combo">
+              <label class="sr-only" for="gate-q" data-i18n="searchLabel">Search a city</label>
+              <input
+                id="gate-q"
+                type="text"
+                role="combobox"
+                aria-expanded="false"
+                aria-controls="gate-suggest"
+                aria-autocomplete="list"
+                minlength="2"
+                maxlength="80"
+                data-i18n-placeholder="gate.searchPlaceholder"
+                placeholder="e.g. Madurai"
+              />
+              <ul id="gate-suggest" class="suggest" role="listbox" hidden></ul>
+            </div>
+            <button class="btn btn-primary" type="submit" data-i18n="searchButton">Search</button>
+          </form>
+        </div>
+
+        <div class="gate-block">
+          <h3 class="gate-step">
+            <span class="gate-num">4</span>
+            <span data-i18n="gate.popularHead">Or pick a popular city</span>
+          </h3>
+          <div
+            id="gate-cities"
+            class="chips"
+            role="group"
+            data-i18n-aria="gate.popularLabel"
+            aria-label="Popular cities"
+          ></div>
+        </div>
+
+        <p id="gate-msg" class="gate-msg" role="status" aria-live="polite"></p>
+        <button id="gate-close" class="btn btn-quiet" type="button" hidden data-i18n="gate.cancel">
+          Keep the current place
+        </button>
+      </div>
+    </div>
+
+    <div id="cursor-dot" class="cursor-dot" aria-hidden="true"></div>
+    <div id="cursor-ring" class="cursor-ring" aria-hidden="true"></div>
+
+    <noscript>
+      <p class="noscript">AirSense needs JavaScript to read live air data and draw the skyline.</p>
+    </noscript>
+    <script type="module" src="/js/main.js"></script>
+  </body>
+</html>
